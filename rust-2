@@ -1,0 +1,33 @@
+use std::collections::HashMap;
+use std::cmp::Ord;
+use std::cmp::Ordering;
+trait SortByKey<K, V> {
+    fn sort_by_key(&mut self);
+}
+    K: Ord + Clone,
+{
+    fn sort_by_key(&mut self) {
+        let mut keys: Vec<_> = self.keys().cloned().collect();
+        keys.sort();
+        
+        let mut sorted_map = HashMap::new();
+        for key in keys {
+            if let Some(value) = self.remove(&key) {
+                sorted_map.insert(key, value);
+            }
+        }
+        *self = sorted_map;
+    }
+}
+fn main() {
+
+    let mut my_map: HashMap<i32, &str> = HashMap::new();
+    my_map.insert(3, "three");
+    my_map.insert(1, "one");
+    my_map.insert(4, "four");
+    my_map.insert(2, "two");
+    println!("Before sorting: {:?}", my_map);
+    my_map.sort_by_key();
+    
+    println!("After sorting: {:?}", my_map);
+}
